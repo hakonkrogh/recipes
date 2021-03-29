@@ -10,15 +10,25 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
-    background:#000;
+    --font-heading: 'Averia Serif Libre';
   }
   
   * {
     box-sizing: border-box;
   }
 
+  h1, h2 {
+    font-family: var(--font-heading);
+  }
+
   figure {
     margin: 0;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -56,8 +66,9 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@400;700&family=Open+Sans&display=swap"
           rel="stylesheet"
         />
       </Head>

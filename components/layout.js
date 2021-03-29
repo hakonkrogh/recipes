@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Header from "./header";
+
 const Main = styled.main``;
+
 const Footer = styled.footer`
   background: #fff;
   position: relative;
@@ -22,11 +24,11 @@ const Footer = styled.footer`
   }
 `;
 
-const Layout = ({ tint = "black", children, hideFooter = false }) => {
+const Layout = ({ children, hideFooter = false }) => {
   return (
     <>
       <Main>
-        <Header tint={tint} />
+        <Header />
         {children}
         {!hideFooter && (
           <Footer>
