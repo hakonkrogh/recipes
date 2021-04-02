@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
-    --font-heading: 'Averia Serif Libre';
+    --font-heading: 'Comfortaa';
   }
   
   * {
@@ -68,7 +68,7 @@ export default function App({ Component, pageProps }) {
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@400;700&family=Open+Sans&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Open+Sans&display=swap"
           rel="stylesheet"
         />
       </Head>

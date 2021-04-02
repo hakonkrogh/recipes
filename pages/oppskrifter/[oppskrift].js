@@ -1,38 +1,63 @@
-import { Image } from "@crystallize/react-image";
-import CrystallizeContent from "@crystallize/content-transformer/react";
 import { fetcher } from "lib/graphql";
-import Section from "components/story/section";
-import FeaturedProducts from "components/story/featured-products";
-import Layout from "components/layout";
-import Meta from "components/meta";
-import {
-  Outer,
-  ScrollWrapper,
-  Title,
-  Byline,
-  Content,
-  ContentInner,
-  Lead,
-  Author,
-  AuthorName,
-  AuthorRole,
-  AuthorPhoto,
-  SectionHeading,
-} from "components/story/styles";
+
+import Header from "components/recipe/header";
 
 const query = `
   query GET_RECIPE($path: String!) {
     recipe: catalogue(path: $path, language: "no") {
       name
+
+      images: component(id: "images") {
+        content {
+          ... on ImageContent {
+            images {
+              url
+              altText
+              variants {
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+
+      intro: component(id: "intro") {
+        content {
+          ... on RichTextContent {
+            json
+          }
+        }
+      }
+
+      servings: component(id: "servings") {
+        content {
+          ... on NumericContent {
+            number
+          }
+        }
+      }
     }
   }
 `;
+
+function normalise({ recipe }) {
+  const { servings, intro, images, ...rest } = recipe;
+
+  return {
+    ...rest,
+    intro: intro.content.json,
+    servings: servings.content.number,
+    images: images.content.images,
+  };
+}
 
 export async function getStaticProps({ params }) {
   const path = `/oppskrifter/${params.oppskrift}`;
   const { data } = await fetcher([query, { path }]);
 
-  return { props: { ...data }, revalidate: 1 };
+  return { props: { ...normalise(data) }, revalidate: 1 };
 }
 
 export async function getStaticPaths() {
@@ -52,6 +77,11 @@ export async function getStaticPaths() {
   };
 }
 
-export default function Recipe({ recipe }) {
-  return recipe.name;
+export default function Recipe({ name, images, servings }) {
+  return (
+    <div>
+      <Header name={name} images={images} />
+      Servings: {servings}
+    </div>
+  );
 }

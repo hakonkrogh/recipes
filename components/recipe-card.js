@@ -29,7 +29,7 @@ const NameBackdrop = styled.div`
   bottom: 0;
   height: 50%;
   width: 100%;
-  background: linear-gradient(#fff0, #0006);
+  background: linear-gradient(#fff0, #000b);
 `;
 
 const Name = styled.h2`
@@ -42,6 +42,7 @@ const Name = styled.h2`
   text-align: center;
   padding: 1.5em 3em;
   margin: 0;
+  text-transform: uppercase;
 `;
 
 export default function RecipeCard({ path, images, name }) {
