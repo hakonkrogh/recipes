@@ -1,6 +1,8 @@
 import { fetcher } from "lib/graphql";
 
 import Header from "components/recipe/header";
+import { useState } from "react";
+import Ingredients from "components/recipe/ingredients";
 
 const query = `
   query GET_RECIPE($path: String!) {
@@ -38,18 +40,90 @@ const query = `
           }
         }
       }
+      instructions: component(id: "instructions") {
+        content {
+          ... on ContentChunkContent {
+            chunks {
+              id,
+              name
+              content {
+                ... on SingleLineContent {
+                  text
+                }
+                ... on RichTextContent {
+                  json
+                }
+                ... on NumericContent {
+                  number
+                  unit
+                }
+                ... on ItemRelationsContent {
+                  ...relatedItemContent
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  fragment relatedItemContent on ItemRelationsContent {
+    items {
+      id
+      name
+      path
+      ... on Product {
+        defaultVariant {
+          images {
+            url
+            altText
+            variants {
+              url
+              width
+              height
+            }
+          }
+        }
+      }
     }
   }
 `;
 
 function normalise({ recipe }) {
-  const { servings, intro, images, ...rest } = recipe;
+  const { servings, intro, images, instructions, ...rest } = recipe;
+
+  function getIngredients() {
+    const ingredients = [];
+
+    instructions.content.chunks.forEach((chunk) => {
+      const ingredient = chunk.find((c) => c.id === "ingredient")?.content
+        ?.items?.[0];
+      if (ingredient) {
+        const amount = chunk.find((c) => c.id === "ingredient-amount")?.content;
+
+        const existing = ingredients.find((i) => i.id === ingredient.id);
+
+        if (existing) {
+          existing.amounts.push(amount);
+        } else {
+          ingredients.push({
+            ...ingredient,
+            amounts: [amount],
+          });
+        }
+      }
+    });
+
+    return ingredients;
+  }
 
   return {
     ...rest,
     intro: intro.content.json,
-    servings: servings.content.number,
+    baseServings: servings.content.number,
     images: images.content.images,
+    ingredients: getIngredients(),
   };
 }
 
@@ -77,11 +151,24 @@ export async function getStaticPaths() {
   };
 }
 
-export default function Recipe({ name, images, servings }) {
+export default function Recipe({ name, images, baseServings, ingredients }) {
+  const [servings, setServings] = useState(baseServings);
+
+  console.log(ingredients);
+
   return (
     <div>
-      <Header name={name} images={images} />
-      Servings: {servings}
+      <Header
+        name={name}
+        images={images}
+        servings={servings}
+        setServings={setServings}
+      />
+      <Ingredients
+        ingredients={ingredients}
+        servings={servings}
+        baseServings={baseServings}
+      />
     </div>
   );
 }

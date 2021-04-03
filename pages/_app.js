@@ -6,6 +6,10 @@ import { screen } from "ui/screen";
 import { responsive } from "ui/responsive";
 
 const GlobalStyle = createGlobalStyle`
+  :root {
+    --spacing-x: 2.5rem;
+  }
+  
   body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
@@ -29,6 +33,17 @@ const GlobalStyle = createGlobalStyle`
     display: block;
     max-width: 100%;
     object-fit: cover;
+  }
+
+  input,
+  select {
+    font-size: 1rem;
+  }
+
+  input {
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    padding: 0.5em;
   }
 `;
 
