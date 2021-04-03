@@ -3,6 +3,24 @@ import { fetcher } from "lib/graphql";
 import Header from "components/recipe/header";
 import { useState } from "react";
 import Ingredients from "components/recipe/ingredients";
+import Instructions from "components/recipe/instructions";
+
+export async function getStaticPaths() {
+  const data = await fetcher(`
+    {
+      catalogue(path: "/oppskrifter", language: "no") {
+        children {
+          path
+        }
+      }
+    }
+  `);
+
+  return {
+    paths: data?.data?.catalogue?.children?.map((c) => c.path) || [],
+    fallback: "blocking",
+  };
+}
 
 const query = `
   query GET_RECIPE($path: String!) {
@@ -124,6 +142,18 @@ function normalise({ recipe }) {
     baseServings: servings.content.number,
     images: images.content.images,
     ingredients: getIngredients(),
+    instructions: instructions.content.chunks.map((chunk) => {
+      const find = (id) => chunk.find((i) => i.id === id);
+      return {
+        title: find("title")?.content?.text ?? null,
+        body: find("body")?.content.json ?? null,
+        equipment: find("equipment")?.content?.items ?? null,
+        ingredient: find("ingredient")?.content?.items?.[0] ?? null,
+        "ingredient-amount": find("ingredient-amount")?.content ?? null,
+        "prep-time": find("prep-time")?.content ?? null,
+        "cook-time": find("cook-time")?.content ?? null,
+      };
+    }),
   };
 }
 
@@ -134,27 +164,14 @@ export async function getStaticProps({ params }) {
   return { props: { ...normalise(data) }, revalidate: 1 };
 }
 
-export async function getStaticPaths() {
-  const data = await fetcher(`
-    {
-      catalogue(path: "/oppskrifter", language: "no") {
-        children {
-          path
-        }
-      }
-    }
-  `);
-
-  return {
-    paths: data?.data?.catalogue?.children?.map((c) => c.path) || [],
-    fallback: "blocking",
-  };
-}
-
-export default function Recipe({ name, images, baseServings, ingredients }) {
+export default function Recipe({
+  name,
+  images,
+  baseServings,
+  ingredients,
+  instructions,
+}) {
   const [servings, setServings] = useState(baseServings);
-
-  console.log(ingredients);
 
   return (
     <div>
@@ -166,6 +183,11 @@ export default function Recipe({ name, images, baseServings, ingredients }) {
       />
       <Ingredients
         ingredients={ingredients}
+        servings={servings}
+        baseServings={baseServings}
+      />
+      <Instructions
+        instructions={instructions}
         servings={servings}
         baseServings={baseServings}
       />

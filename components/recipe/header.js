@@ -17,7 +17,7 @@ const Images = styled.div`
   > figure {
     flex: 0 0 80vw;
     width: 80vw;
-    height: 300px;
+    height: 250px;
     position: relative;
 
     &:not(:last-child) {
@@ -61,12 +61,12 @@ export default function Header({ name, images, servings, setServings }) {
 
   return (
     <Outer>
-      <h1>{name}</h1>
       <Images>
         {images?.map((image, index) => (
           <Image key={index} {...image} />
         ))}
       </Images>
+      <h1>{name}</h1>
       <Servings>
         <label htmlFor="servings">Serveringer</label>
         <input
