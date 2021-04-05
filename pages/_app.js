@@ -15,6 +15,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     --font-heading: 'Comfortaa';
+    max-width: 768px;
+    margin: 0 auto;
   }
   
   * {

@@ -15,8 +15,8 @@ const Images = styled.div`
   scroll-behavior: smooth;
 
   > figure {
-    flex: 0 0 80vw;
-    width: 80vw;
+    flex: 0 0 80%;
+    width: 80%;
     height: 250px;
     position: relative;
 
