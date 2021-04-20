@@ -19,10 +19,10 @@ const query = `
         id
         name
         path
-        images: component(id: "images") {
+        firstImage: component(id: "images") {
           content {
             ... on ImageContent {
-              images {
+              first {
                 altText
                 variants {
                   url
