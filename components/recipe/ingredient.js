@@ -49,7 +49,7 @@ export default function Ingredient({
   return (
     <Outer $compact={compact} {...rest}>
       <Meta $compact={compact}>
-        <Image {...ingredient.defaultVariant.images[0]} sizes="100px" />
+        <Image {...ingredient.defaultVariant.firstImage} sizes="100px" />
         {!compact && <span>{ingredient.name}</span>}
       </Meta>
       <Amount

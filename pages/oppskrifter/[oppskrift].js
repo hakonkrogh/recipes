@@ -93,7 +93,7 @@ const query = `
       path
       ... on Product {
         defaultVariant {
-          images {
+          firstImage {
             url
             altText
             variants {

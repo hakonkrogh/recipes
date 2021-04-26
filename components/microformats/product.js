@@ -84,7 +84,7 @@ const Product = ({ path, name, defaultVariant }) => (
     <Link href="/shop/[product]" as={path} passHref>
       <Outer>
         <ImgWrapper>
-          <Image {...defaultVariant?.images?.[0]} sizes="25vw" />
+          <Image {...defaultVariant?.firstImage} sizes="25vw" />
         </ImgWrapper>
         <Content>
           <Name>{name} </Name>

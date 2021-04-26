@@ -45,8 +45,8 @@ const Name = styled.h2`
   text-transform: uppercase;
 `;
 
-export default function RecipeCard({ path, firstImage, name }) {
-  const image = firstImage?.content?.first;
+export default function RecipeCard({ path, images, name }) {
+  const image = images?.content?.firstImage;
   if (!image) {
     return null;
   }
